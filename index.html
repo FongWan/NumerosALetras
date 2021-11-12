@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang=es-CL dir=ltr>
+<meta charset=utf-8>
+<title>Número a letras</title>
+<meta name=HandheldFriendly content=True>
+<meta name=viewport content="width=device-width,initial-scale=1.0,minimal-ui">
+<style>
+html {
+	background: #fff;
+	color: #000;
+}
+
+html,
+.textfield {
+	font: 100%/1.6 sans-serif;
+}
+
+p {
+	position: relative;
+	margin: 2.5rem 0 1rem;
+}
+
+.textfield {
+	width: 100%;
+	min-height: 4.5rem;
+	padding: 1rem;
+	border: solid #ddd;
+	border-width: 0.0625rem;
+	border-radius: 0.25rem;
+	background: #fff;
+	box-sizing: border-box;
+	cursor: pointer;
+	font-size: 1.5em;
+}
+
+.label {
+	position: absolute;
+	left: 0.5rem;
+	top: -0.6rem;
+	background: #fff;
+	padding: 0 0.5rem;
+	color: #666;
+	font-size: 0.75em;
+}
+
+.error-msg {
+	display: block;
+	padding: 0.25em 1em 0;
+	color: #e22c2c;
+}
+
+.textfield:focus,
+.textfield:focus-visible {
+	border-color: #1a73e8;
+	outline: 0.0625rem solid #1a73e8;
+}
+
+.textfield:focus + .label,
+.textfield:focus-visible + .label {
+	color: #1a73e8;
+}
+
+#top {
+	max-width: 30rem;
+	margin: 0 auto;
+	padding: 1rem;
+	box-sizing: border-box;
+	overflow-y: scroll;
+}
+
+#main-title {
+	position: relative;
+	margin: 0 2rem;
+	padding: 1rem 0 0;
+	font-weight: 400;
+	font-size: 1.2em;
+	text-align: center;
+}
+
+#noscript {
+	display: block;
+	margin: 1rem;
+	padding: 1rem;
+	border: 0.25rem solid #a00;
+	background: #fcc;
+}
+
+#number {
+	-moz-appearance:textfield;
+}
+
+#number::-webkit-outer-spin-button,
+#number::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+#word {
+	display: block;
+	cursor: text;
+}
+</style>
+<body id=top>
+<h1 id=main-title>Convertir números a letras en tiempo real</h1>
+<noscript><span id=noscript>¡Oh, has bloqueado la ejecución de javascript! Por favor habilítelo para poder usar nuestro sitio.</span></noscript>
+<p><input class=textfield type=number id=number autocorrect=off autocomplete=off spellcheck=false autocapitalize=off required><label class=label for=number>Números</label><small class=error-msg id=number-error></small>
+<p><span class=textfield id=word></span><span class=label for=word>Letras</span>
+<script src=number2word.js></script>
+<script>
+(function (document, window) {
+	let numberInput = document.getElementById('number'),
+	    numberError = document.getElementById('number-error'),
+	    wordInput = document.getElementById('word');
+
+	numberInput.oninput = function () {
+		if ('' == this.value) {
+			wordInput.textContent = '';
+			return;
+		}
+
+		if ('undefined' == typeof number2word) {
+			numberError.innerHTML = 'No se pudo cargar correctamente la función para convertir de número a letras, por favor <a href="https://github.com/FongWan/numeros-a-letras/issues">reporta el error</a>.';
+			return;
+		}
+
+		if (!parseFloat(this.value)) {
+			numberError.textContent = '¡Lo que has escrito no es un número!';
+			return;
+		}
+
+		let words = number2word(this.value);
+		if (!words) {
+			numberError.innerHTML = 'Ocurrió un error inesperado, por favor <a href="https://github.com/FongWan/numeros-a-letras/issues">reporta el error</a>.'
+			return;
+		}
+
+		wordInput.textContent = words;
+	};
+
+	wordInput.onclick = function () {
+		window.getSelection().removeAllRanges();
+		if (this.firstChild) {
+			var range = document.createRange();
+			range.selectNode(this.firstChild);
+			window.getSelection().addRange(range);
+		}
+	};
+})(document, window)
+</script>
