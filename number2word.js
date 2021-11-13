@@ -21,7 +21,7 @@ let thousand2word = function (number) {
 		if (0 != number[0] && 1 == number[1]) str.push(hundreds[number[1]] + 'to ');
 		else                                  str.push(hundreds[number[1]] + ' ');
 	}
-	if (0 != number[2]) {
+	if (0 != number[2] || (0 == number[2] && 0 != number[3])) {
 		if (1 == Number(number[2]))                str.push('mil ');
 		else if (firstThirties[Number(number[2])]) str.push(firstThirties[Number(number[2])] + ' mil ');
 		else if (firstThirties[number[2][1]])      str.push(lastTens[number[2][0]] + ' y ' + firstThirties[number[2][1]] + ' mil ');
